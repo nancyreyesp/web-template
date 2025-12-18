@@ -10,8 +10,9 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   padding: 0 12px 0 0;
+  position: relative;
 
   /* fill */
   background-color: var(--colorWhite);
@@ -28,10 +29,35 @@
 .logoLink {
   border-bottom: 0px solid;
   transition: var(--transitionStyleButton);
+  flex-shrink: 0;
+  position: relative;
 }
 .logoLink:hover {
   border-bottom: 4px solid var(--marketplaceColor);
   border-radius: 0;
+}
+
+/* Center logo wrapper */
+.centerLogo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Left spacer to balance right side */
+.leftSpacer {
+  flex: 1 1 0;
+}
+
+/* Right navigation container */
+.rightNavigation {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0;
+  margin-left: auto;
+  flex: 1 1 0;
+  justify-content: flex-end;
 }
 
 /* Search */

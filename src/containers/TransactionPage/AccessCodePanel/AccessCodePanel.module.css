@@ -1,0 +1,94 @@
+@import '../../../styles/customMediaQueries.css';
+
+.root {
+  border: 1px solid var(--colorGrey100);
+  border-radius: 8px;
+  padding: 24px;
+  margin-top: 24px;
+  background-color: var(--colorWhite);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.icon {
+  width: 32px;
+  height: 32px;
+  color: var(--marketplaceColor);
+}
+
+.title {
+  composes: marketplaceH3FontStyles from global;
+  margin: 0;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.info {
+  composes: marketplaceBodyFontStyles from global;
+  color: var(--colorGrey700);
+  margin: 0;
+}
+
+.pinDisplay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px;
+  background-color: var(--colorGrey50);
+  border-radius: 8px;
+  gap: 8px;
+}
+
+.pinLabel {
+  composes: marketplaceBodyFontStyles from global;
+  color: var(--colorGrey700);
+  font-size: 14px;
+}
+
+.pinCode {
+  font-size: 48px;
+  font-weight: var(--fontWeightBold);
+  color: var(--marketplaceColor);
+  letter-spacing: 8px;
+  font-family: 'Courier New', monospace;
+}
+
+.button {
+  composes: marketplaceButtonStyles from global;
+  composes: marketplaceButtonStylesPrimary from global;
+  
+  padding: 12px 24px;
+  font-size: 16px;
+  align-self: flex-start;
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.note {
+  composes: marketplaceBodyFontStyles from global;
+  color: var(--colorGrey600);
+  font-size: 14px;
+  padding: 12px;
+  background-color: var(--colorInfoLight);
+  border-radius: 4px;
+}
+
+.error {
+  composes: marketplaceBodyFontStyles from global;
+  color: var(--colorFail);
+  padding: 12px;
+  background-color: var(--colorFailLight);
+  border-radius: 4px;
+}

@@ -12,7 +12,7 @@ import {
   propTypes,
 } from '../../util/types';
 
-import { NamedLink, ExternalLink } from '../../components';
+import { NamedLink, ExternalLink, FavoriteButton } from '../../components';
 import EditIcon from './EditIcon';
 
 import css from './ListingPage.module.css';
@@ -163,6 +163,16 @@ export const ActionBarMaybe = props => {
         <p className={css.closedListingText}>
           <FormattedMessage id="ListingPage.closedListing" />
         </p>
+      </div>
+    );
+  } else {
+    // Not own listing - show favorite button
+    return (
+      <div className={classes}>
+        <FavoriteButton
+          listingId={listing?.id?.uuid}
+          isAuthenticated={!!currentUser}
+        />
       </div>
     );
   }

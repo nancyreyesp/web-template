@@ -440,6 +440,24 @@ const EditListingDetailsForm = props => (
             />
           )}
 
+          {isCompatibleCurrency && (
+            <FieldTextInput
+              id={`${formId}lockId`}
+              name="lockId"
+              className={css.lockId}
+              type="text"
+              label={intl.formatMessage({ id: 'EditListingDetailsForm.lockIdLabel' })}
+              placeholder={intl.formatMessage({
+                id: 'EditListingDetailsForm.lockIdPlaceholder',
+              })}
+              validate={required(
+                intl.formatMessage({
+                  id: 'EditListingDetailsForm.lockIdRequired',
+                })
+              )}
+            />
+          )}
+
           {showListingFields && isCompatibleCurrency && (
             <AddListingFields
               listingType={listingType}

@@ -24,6 +24,7 @@ import BookingLocationMaybe from './BookingLocationMaybe';
 import FeedSection from './FeedSection';
 import DiminishedActionButtonMaybe from './DiminishedActionButtonMaybe';
 import PanelHeading from './PanelHeading';
+import AccessCodePanel from '../AccessCodePanel';
 
 import css from './TransactionPanel.module.css';
 
@@ -151,6 +152,7 @@ export class TransactionPanelComponent extends Component {
       rootClassName,
       className,
       currentUser,
+      transaction,
       transactionRole,
       listing,
       customer,
@@ -312,6 +314,10 @@ export class TransactionPanelComponent extends Component {
                   className={css.deliveryInfoSection}
                   listing={listing}
                   showBookingLocation={showBookingLocation}
+                />
+                <AccessCodePanel
+                  transaction={transaction}
+                  transactionRole={transactionRole}
                 />
               </div>
             ) : null}

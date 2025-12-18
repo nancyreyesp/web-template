@@ -64,10 +64,22 @@ const SectionHero = props => {
       options={fieldOptions}
     >
       {hasHeaderFields ? (
-        <header className={defaultClasses.sectionDetails}>
-          <Field data={title} className={defaultClasses.title} options={fieldOptions} />
-          <Field data={description} className={defaultClasses.description} options={fieldOptions} />
-          <Field data={callToAction} className={defaultClasses.ctaButton} options={fieldOptions} />
+        <header className={classNames(defaultClasses.sectionDetails, css.heroDetails)}>
+          <Field
+            data={title}
+            className={classNames(defaultClasses.title, css.heroTitle)}
+            options={fieldOptions}
+          />
+          <Field
+            data={description}
+            className={classNames(defaultClasses.description, css.heroDescription)}
+            options={fieldOptions}
+          />
+          <Field
+            data={callToAction}
+            className={classNames(defaultClasses.ctaButton, css.heroCTA)}
+            options={fieldOptions}
+          />
         </header>
       ) : null}
     </SectionContainer>

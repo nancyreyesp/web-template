@@ -9,6 +9,44 @@
   /* Hero specific */
   min-height: 80vh;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: center; /* center horizontally */
+  align-items: flex-start; /* move content to the top */
+  padding-top: 32px; /* some top spacing */
+  padding-bottom: 32px; /* space for button at bottom */
 }
+
+/* Hero-specific typography and CTA sizing/positioning */
+.heroTitle {
+  font-size: 60px;
+  line-height: 1.05;
+  font-weight: var(--fontWeightBold);
+}
+
+@media (--viewportLarge) {
+  .heroTitle {
+    font-size: 72px;
+  }
+}
+
+.heroDescription {
+  font-size: 22px;
+  line-height: 1.6;
+  margin-top: 32px !important; /* more space from title */
+}
+
+@media (--viewportLarge) {
+  .heroDescription {
+    font-size: 26px;
+  }
+}
+
+.heroCTA {
+  padding: 20px 48px !important; /* much bigger button */
+  font-size: 24px !important; /* much bigger label */
+  position: absolute; /* position at bottom */
+  bottom: -400px; /* closer to bottom edge */
+  left: 50%; /* center horizontally */
+  transform: translateX(-50%); /* adjust for centering */
+  white-space: nowrap; /* keep text in one line */
+}
+

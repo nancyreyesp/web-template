@@ -10,7 +10,7 @@ import { setCurrentUser } from '../../ducks/user.duck';
 //////////////////
 export const uploadImageThunk = createAsyncThunk(
   'ProfileSettingsPage/uploadImage',
-  ({ id, file }, { rejectWithValue, extra: sdk }) => {
+  ({ id, file, fieldKey = 'profileImage' }, { rejectWithValue, extra: sdk }) => {
     const bodyParams = {
       image: file,
     };
@@ -23,10 +23,10 @@ export const uploadImageThunk = createAsyncThunk(
       .upload(bodyParams, queryParams)
       .then(resp => {
         const uploadedImage = resp.data.data;
-        return { id, uploadedImage };
+        return { id, uploadedImage, fieldKey };
       })
       .catch(e => {
-        return rejectWithValue({ id, error: storableError(e) });
+        return rejectWithValue({ id, fieldKey, error: storableError(e) });
       });
   }
 );
@@ -76,8 +76,11 @@ const profileSettingsPageSlice = createSlice({
   name: 'ProfileSettingsPage',
   initialState: {
     image: null,
+    idDocumentImage: null,
     uploadImageError: null,
     uploadInProgress: false,
+    idDocumentUploadInProgress: false,
+    idDocumentUploadError: null,
     updateInProgress: false,
     updateProfileError: null,
   },
@@ -91,21 +94,40 @@ const profileSettingsPageSlice = createSlice({
     builder
       // uploadImage cases
       .addCase(uploadImageThunk.pending, (state, action) => {
-        const { id, file } = action.meta.arg;
-        state.image = { id, file };
-        state.uploadInProgress = true;
-        state.uploadImageError = null;
+        const { id, file, fieldKey } = action.meta.arg;
+        if (fieldKey === 'identityDocumentImage') {
+          state.idDocumentImage = { id, file };
+          state.idDocumentUploadInProgress = true;
+          state.idDocumentUploadError = null;
+        } else {
+          state.image = { id, file };
+          state.uploadInProgress = true;
+          state.uploadImageError = null;
+        }
       })
       .addCase(uploadImageThunk.fulfilled, (state, action) => {
-        const { id, uploadedImage } = action.payload;
-        const { file } = state.image || {};
-        state.image = { id, imageId: uploadedImage.id, file, uploadedImage };
-        state.uploadInProgress = false;
+        const { id, uploadedImage, fieldKey } = action.payload;
+        if (fieldKey === 'identityDocumentImage') {
+          const { file } = state.idDocumentImage || {};
+          state.idDocumentImage = { id, imageId: uploadedImage.id, file, uploadedImage };
+          state.idDocumentUploadInProgress = false;
+        } else {
+          const { file } = state.image || {};
+          state.image = { id, imageId: uploadedImage.id, file, uploadedImage };
+          state.uploadInProgress = false;
+        }
       })
       .addCase(uploadImageThunk.rejected, (state, action) => {
-        state.image = null;
-        state.uploadInProgress = false;
-        state.uploadImageError = action.payload.error;
+        const { fieldKey, error } = action.payload;
+        if (fieldKey === 'identityDocumentImage') {
+          state.idDocumentImage = null;
+          state.idDocumentUploadInProgress = false;
+          state.idDocumentUploadError = error;
+        } else {
+          state.image = null;
+          state.uploadInProgress = false;
+          state.uploadImageError = error;
+        }
       })
       // updateProfile cases
       .addCase(updateProfileThunk.pending, state => {
@@ -114,10 +136,12 @@ const profileSettingsPageSlice = createSlice({
       })
       .addCase(updateProfileThunk.fulfilled, state => {
         state.image = null;
+        state.idDocumentImage = null;
         state.updateInProgress = false;
       })
       .addCase(updateProfileThunk.rejected, (state, action) => {
         state.image = null;
+        state.idDocumentImage = null;
         state.updateInProgress = false;
         state.updateProfileError = action.payload;
       });

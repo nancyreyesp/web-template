@@ -47,6 +47,28 @@
   }
 }
 
+.identityDocumentUpload {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  @media (--viewportMedium) {
+    margin-top: 24px;
+    gap: 10px;
+  }
+}
+
+.identityDocumentStatus {
+  composes: marketplaceBodyFontStyles from global;
+  color: var(--colorSuccess);
+}
+
+.identityDocumentStatusPending {
+  composes: marketplaceBodyFontStyles from global;
+  color: var(--colorGrey700);
+}
+
 .label {
   width: var(--ProfileSettingsForm_avatarSize);
   @media (--viewportMedium) {

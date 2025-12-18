@@ -1,0 +1,49 @@
+@import '../../styles/customMediaQueries.css';
+
+.root {
+  composes: marketplaceButtonStyles from global;
+  composes: marketplaceButtonStylesSecondary from global;
+  
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: 1px solid var(--colorGrey300);
+  background-color: var(--colorWhite);
+  color: var(--colorGrey700);
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: var(--colorGrey50);
+    border-color: var(--marketplaceColor);
+    color: var(--marketplaceColor);
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(var(--marketplaceColorRGB), 0.2);
+  }
+}
+
+.active {
+  background-color: var(--marketplaceColorLight, rgba(255, 0, 0, 0.1));
+  border-color: var(--marketplaceColor);
+  color: var(--marketplaceColor);
+
+  &:hover {
+    background-color: var(--marketplaceColorLight, rgba(255, 0, 0, 0.15));
+  }
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.text {
+  font-weight: var(--fontWeightMedium);
+  font-size: 14px;
+  line-height: 18px;
+}

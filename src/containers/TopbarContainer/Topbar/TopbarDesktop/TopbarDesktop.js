@@ -194,26 +194,31 @@ const TopbarDesktop = props => {
       className={classes}
       aria-label={intl.formatMessage({ id: 'TopbarDesktop.screenreader.topbarNavigation' })}
     >
-      <LinkedLogo
-        className={css.logoLink}
-        layout="desktop"
-        alt={intl.formatMessage({ id: 'TopbarDesktop.logo' }, { marketplaceName })}
-        linkToExternalSite={config?.topbar?.logoLink}
-      />
-      {searchFormMaybe}
+      <div className={css.leftSpacer} />
 
-      <CustomLinksMenu
-        currentPage={currentPage}
-        customLinks={customLinks}
-        intl={intl}
-        hasClientSideContentReady={authenticatedOnClientSide || !isAuthenticatedOrJustHydrated}
-        showCreateListingsLink={showCreateListingsLink}
-      />
+      <div className={css.centerLogo}>
+        <LinkedLogo
+          className={css.logoLink}
+          layout="desktop"
+          alt={intl.formatMessage({ id: 'TopbarDesktop.logo' }, { marketplaceName })}
+          linkToExternalSite={config?.topbar?.logoLink}
+        />
+      </div>
 
-      {inboxLinkMaybe}
-      {profileMenuMaybe}
-      {signupLinkMaybe}
-      {loginLinkMaybe}
+      <div className={css.rightNavigation}>
+        <CustomLinksMenu
+          currentPage={currentPage}
+          customLinks={customLinks}
+          intl={intl}
+          hasClientSideContentReady={authenticatedOnClientSide || !isAuthenticatedOrJustHydrated}
+          showCreateListingsLink={showCreateListingsLink}
+        />
+
+        {inboxLinkMaybe}
+        {profileMenuMaybe}
+        {signupLinkMaybe}
+        {loginLinkMaybe}
+      </div>
     </nav>
   );
 };

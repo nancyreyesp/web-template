@@ -228,6 +228,7 @@ const getInitialValues = (
   return {
     title,
     description,
+    lockId: publicData?.lockId || '',
     ...nestedCategories,
     // Transaction type info: listingType, transactionProcessAlias, unitType
     ...getTransactionInfo(listingTypes, existingListingTypeInfo),
@@ -383,6 +384,7 @@ const EditListingDetailsPanel = props => {
                 listingType,
                 transactionProcessAlias,
                 unitType,
+                lockId,
                 ...cleanedNestedCategories,
                 ...publicListingFields,
               },

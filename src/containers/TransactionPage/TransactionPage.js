@@ -657,6 +657,7 @@ export const TransactionPageComponent = props => {
     <TransactionPanel
       className={detailsClassName}
       currentUser={currentUser}
+      transaction={transaction}
       transactionId={transaction?.id}
       listing={listing}
       customer={customer}

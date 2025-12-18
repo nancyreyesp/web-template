@@ -24,6 +24,7 @@ const LandingPage = loadable(() => import(/* webpackChunkName: "LandingPage" */ 
 const ListingPageCoverPhoto = loadable(() => import(/* webpackChunkName: "ListingPageCoverPhoto" */ /* webpackPrefetch: true */ '../containers/ListingPage/ListingPageCoverPhoto'));
 const ListingPageCarousel = loadable(() => import(/* webpackChunkName: "ListingPageCarousel" */ /* webpackPrefetch: true */ '../containers/ListingPage/ListingPageCarousel'));
 const ManageListingsPage = loadable(() => import(/* webpackChunkName: "ManageListingsPage" */ '../containers/ManageListingsPage/ManageListingsPage'));
+const FavoritesPage = loadable(() => import(/* webpackChunkName: "FavoritesPage" */ '../containers/FavoritesPage/FavoritesPage'));
 const ManageAccountPage = loadable(() => import(/* webpackChunkName: "ManageAccountPage" */ '../containers/ManageAccountPage/ManageAccountPage'));
 const PasswordChangePage = loadable(() => import(/* webpackChunkName: "PasswordChangePage" */ '../containers/PasswordChangePage/PasswordChangePage'));
 const PasswordRecoveryPage = loadable(() => import(/* webpackChunkName: "PasswordRecoveryPage" */ '../containers/PasswordRecoveryPage/PasswordRecoveryPage'));
@@ -300,6 +301,14 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       authPage: 'LoginPage',
       component: ManageListingsPage,
       loadData: pageDataLoadingAPI.ManageListingsPage.loadData,
+    },
+    {
+      path: '/favorites',
+      name: 'FavoritesPage',
+      auth: true,
+      authPage: 'LoginPage',
+      component: FavoritesPage,
+      loadData: pageDataLoadingAPI.FavoritesPage.loadData,
     },
     {
       path: '/account',

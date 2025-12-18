@@ -75,20 +75,24 @@ export const ProfileSettingsPageComponent = props => {
   const {
     currentUser,
     image,
+    idDocumentImage,
     onImageUpload,
+    onIdentityImageUpload,
     onUpdateProfile,
     scrollingDisabled,
     updateInProgress,
     updateProfileError,
     uploadImageError,
     uploadInProgress,
+    idDocumentUploadError,
+    idDocumentUploadInProgress,
   } = props;
 
   const { userFields, userTypes = [] } = config.user;
   const publicUserFields = userFields.filter(uf => uf.scope === 'public');
 
   const handleSubmit = (values, userType) => {
-    const { firstName, lastName, displayName, bio: rawBio, ...rest } = values;
+    const { firstName, lastName, displayName, bio: rawBio, identityDocumentImage, ...rest } = values;
 
     const displayNameMaybe = displayName
       ? { displayName: displayName.trim() }
@@ -105,8 +109,14 @@ export const ProfileSettingsPageComponent = props => {
       publicData: {
         ...pickUserFieldsData(rest, 'public', userType, userFields),
       },
+      privateData: {
+        ...privateData,
+        identityDocumentImageId:
+          identityDocumentImage?.imageId || privateData.identityDocumentImageId || null,
+      },
     };
     const uploadedImage = props.image;
+    const uploadedIdentityDocument = props.idDocumentImage;
 
     // Update profileImage only if file system has been accessed
     const updatedValues =
@@ -114,17 +124,33 @@ export const ProfileSettingsPageComponent = props => {
         ? { ...profile, profileImageId: uploadedImage.imageId }
         : profile;
 
-    onUpdateProfile(updatedValues);
+    const updatedValuesWithIdDocument =
+      uploadedIdentityDocument && uploadedIdentityDocument.imageId && uploadedIdentityDocument.file
+        ? {
+            ...updatedValues,
+            privateData: {
+              ...updatedValues.privateData,
+              identityDocumentImageId: uploadedIdentityDocument.imageId,
+            },
+          }
+        : updatedValues;
+
+    onUpdateProfile(updatedValuesWithIdDocument);
   };
 
   const user = ensureCurrentUser(currentUser);
-  const { firstName, lastName, displayName, bio, publicData } = user?.attributes.profile;
+  const { firstName, lastName, displayName, bio, publicData, privateData = {} } =
+    user?.attributes.profile;
   // I.e. the status is active, not pending-approval or banned
   const isUnauthorizedUser = currentUser && !isUserAuthorized(currentUser);
 
   const { userType } = publicData || {};
   const profileImageId = user.profileImage ? user.profileImage.id : null;
   const profileImage = image || { imageId: profileImageId };
+
+  const identityDocumentImageId = privateData?.identityDocumentImageId || null;
+  const identityDocumentImage =
+    idDocumentImage || (identityDocumentImageId ? { imageId: identityDocumentImageId } : null);
   const userTypeConfig = userTypes.find(config => config.userType === userType);
   const isDisplayNameIncluded = userTypeConfig?.defaultUserFields?.displayName !== false;
   // ProfileSettingsForm decides if it's allowed to show the input field.
@@ -140,13 +166,18 @@ export const ProfileSettingsPageComponent = props => {
         ...displayNameMaybe,
         bio,
         profileImage: user.profileImage,
+        identityDocumentImage,
         ...initialValuesForUserFields(publicData, 'public', userType, userFields),
       }}
       profileImage={profileImage}
+      identityDocumentImage={identityDocumentImage}
       onImageUpload={e => onImageUploadHandler(e, onImageUpload)}
+      onIdentityImageUpload={e => onImageUploadHandler(e, onIdentityImageUpload)}
       uploadInProgress={uploadInProgress}
+      idDocumentUploadInProgress={idDocumentUploadInProgress}
       updateInProgress={updateInProgress}
       uploadImageError={uploadImageError}
+      idDocumentUploadError={idDocumentUploadError}
       updateProfileError={updateProfileError}
       onSubmit={values => handleSubmit(values, userType)}
       marketplaceName={config.marketplaceName}
@@ -192,24 +223,32 @@ const mapStateToProps = state => {
   const { currentUser } = state.user;
   const {
     image,
+    idDocumentImage,
     uploadImageError,
+    idDocumentUploadError,
     uploadInProgress,
+    idDocumentUploadInProgress,
     updateInProgress,
     updateProfileError,
   } = state.ProfileSettingsPage;
   return {
     currentUser,
     image,
+    idDocumentImage,
     scrollingDisabled: isScrollingDisabled(state),
     updateInProgress,
     updateProfileError,
     uploadImageError,
     uploadInProgress,
+    idDocumentUploadError,
+    idDocumentUploadInProgress,
   };
 };
 
 const mapDispatchToProps = dispatch => ({
   onImageUpload: data => dispatch(uploadImage(data)),
+  onIdentityImageUpload: data =>
+    dispatch(uploadImage({ ...data, fieldKey: 'identityDocumentImage' })),
   onUpdateProfile: data => dispatch(updateProfile(data)),
 });
 

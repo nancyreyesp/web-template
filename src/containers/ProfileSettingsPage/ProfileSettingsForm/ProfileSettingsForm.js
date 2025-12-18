@@ -135,13 +135,17 @@ class ProfileSettingsFormComponent extends Component {
             intl,
             invalid,
             onImageUpload,
+            onIdentityImageUpload,
             pristine,
             profileImage,
+            identityDocumentImage,
             rootClassName,
             updateInProgress,
             updateProfileError,
             uploadImageError,
+            idDocumentUploadError,
             uploadInProgress,
+            idDocumentUploadInProgress,
             form,
             formId,
             marketplaceName,
@@ -151,6 +155,7 @@ class ProfileSettingsFormComponent extends Component {
           } = fieldRenderProps;
 
           const user = ensureCurrentUser(currentUser);
+          const hasIdentityDocument = !!identityDocumentImage?.imageId;
 
           // First name
           const firstNameLabel = intl.formatMessage({
@@ -182,6 +187,12 @@ class ProfileSettingsFormComponent extends Component {
           });
           const bioPlaceholder = intl.formatMessage({
             id: 'ProfileSettingsForm.bioPlaceholder',
+          });
+
+          const identityDocumentLabel = intl.formatMessage({
+            id: hasIdentityDocument
+              ? 'ProfileSettingsForm.changeIdentityDocumentLabel'
+              : 'ProfileSettingsForm.addIdentityDocumentLabel',
           });
 
           const uploadingOverlay =
@@ -250,6 +261,18 @@ class ProfileSettingsFormComponent extends Component {
               </div>
             );
 
+          const idDocumentUploadErrorMessage = idDocumentUploadError ? (
+            <div className={css.error}>
+              <FormattedMessage id="ProfileSettingsForm.identityDocumentUploadFailed" />
+            </div>
+          ) : null;
+
+          const idDocumentRequiredError = !hasIdentityDocument ? (
+            <div className={css.error}>
+              <FormattedMessage id="ProfileSettingsForm.identityDocumentRequired" />
+            </div>
+          ) : null;
+
           const submitError = updateProfileError ? (
             <div className={css.error}>
               <FormattedMessage id="ProfileSettingsForm.updateProfileFailed" />
@@ -260,8 +283,15 @@ class ProfileSettingsFormComponent extends Component {
           const submitInProgress = updateInProgress;
           const submittedOnce = Object.keys(this.submittedValues).length > 0;
           const pristineSinceLastSubmit = submittedOnce && isEqual(values, this.submittedValues);
+
           const submitDisabled =
-            invalid || pristine || pristineSinceLastSubmit || uploadInProgress || submitInProgress;
+            invalid ||
+            pristine ||
+            pristineSinceLastSubmit ||
+            uploadInProgress ||
+            idDocumentUploadInProgress ||
+            submitInProgress ||
+            !hasIdentityDocument;
 
           const userFieldProps = getPropsForCustomUserFieldInputs(
             userFields,
@@ -346,6 +376,73 @@ class ProfileSettingsFormComponent extends Component {
                 <div className={css.fileInfo}>
                   <FormattedMessage id="ProfileSettingsForm.fileInfo" />
                 </div>
+              </div>
+
+              <div className={css.sectionContainer}>
+                <H4 as="h2" className={css.sectionTitle}>
+                  <FormattedMessage id="ProfileSettingsForm.identityDocumentHeading" />
+                </H4>
+                <p className={css.extraInfo}>
+                  <FormattedMessage id="ProfileSettingsForm.identityDocumentInfo" />
+                </p>
+
+                <Field
+                  accept={ACCEPT_IMAGES}
+                  id="identityDocumentImage"
+                  name="identityDocumentImage"
+                  label={identityDocumentLabel}
+                  type="file"
+                  form={null}
+                  uploadImageError={idDocumentUploadError}
+                  disabled={idDocumentUploadInProgress}
+                >
+                  {fieldProps => {
+                    const { accept, id, input, label, disabled } = fieldProps;
+                    const { name, type } = input;
+                    const onChange = e => {
+                      const file = e.target.files[0];
+                      form.change(`identityDocumentImage`, file);
+                      form.blur(`identityDocumentImage`);
+                      if (file != null) {
+                        const tempId = `${file.name}_${Date.now()}`;
+                        onIdentityImageUpload({ id: tempId, file, fieldKey: 'identityDocumentImage' });
+                      }
+                    };
+
+                    return (
+                      <div className={css.identityDocumentUpload}>
+                        <label className={css.label} htmlFor={id}>
+                          {label}
+                        </label>
+                        <input
+                          accept={accept}
+                          id={id}
+                          name={name}
+                          className={css.uploadAvatarInput}
+                          disabled={disabled}
+                          onChange={onChange}
+                          type={type}
+                        />
+                        {idDocumentUploadInProgress ? (
+                          <div className={css.uploadingImageOverlay}>
+                            <IconSpinner />
+                          </div>
+                        ) : null}
+                        {hasIdentityDocument ? (
+                          <div className={css.identityDocumentStatus}>
+                            <FormattedMessage id="ProfileSettingsForm.identityDocumentUploaded" />
+                          </div>
+                        ) : (
+                          <div className={css.identityDocumentStatusPending}>
+                            <FormattedMessage id="ProfileSettingsForm.identityDocumentPending" />
+                          </div>
+                        )}
+                        {idDocumentUploadErrorMessage}
+                        {!idDocumentUploadInProgress ? idDocumentRequiredError : null}
+                      </div>
+                    );
+                  }}
+                </Field>
               </div>
               <div className={css.sectionContainer}>
                 <H4 as="h2" className={css.sectionTitle}>
